@@ -1,31 +1,30 @@
 // Copyright 2025 NNTU-CS
 #include "alg.h"
 #include "tree.h"
+
 #include <iostream>
+#include <memory>
 #include <vector>
 
 int main() {
-  std::vector<char> elements = {'a', 'b', 'c'};
-  PMTree tree(elements);
+  std::vector<char> input = {'a', 'b', 'c'};
+  auto root = std::make_shared<PMNode>('\0');
 
-  auto all_perms = getAllPerms(tree);
-  std::cout << "All permutations:\n";
-  for (const auto& perm : all_perms) {
-    for (char c : perm) std::cout << c;
-    std::cout << '\n';
+  buildTree(root, input);
+
+  std::vector<std::vector<char>> permutations;
+  std::vector<char> current;
+
+  for (const auto& child : root->children) {
+    collectPerms(child, current, permutations);
   }
 
-  int num1 = 2;
-  auto perm1 = getPerm1(tree, num1);
-  std::cout << "\nPermutation " << num1 << " using getPerm1: ";
-  for (char c : perm1) std::cout << c;
-  std::cout << '\n';
-
-  int num2 = 4;
-  auto perm2 = getPerm2(tree, num2);
-  std::cout << "Permutation " << num2 << " using getPerm2: ";
-  for (char c : perm2) std::cout << c;
-  std::cout << '\n';
+  for (const auto& perm : permutations) {
+    for (char ch : perm) {
+      std::cout << ch;
+    }
+    std::cout << '\n';
+  }
 
   return 0;
 }
