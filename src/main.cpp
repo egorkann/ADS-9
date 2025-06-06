@@ -1,12 +1,12 @@
 // Copyright 2025 NNTU-CS
 #include "main.h"
 
-#include "alg.h"
-#include "tree.h"
-
 #include <iostream>
 #include <memory>
 #include <vector>
+
+#include "alg.h"
+#include "tree.h"
 
 int main() {
   std::vector<char> input = {'a', 'b', 'c'};
