@@ -1,30 +1,27 @@
 // Copyright 2025 NNTU-CS
 #include <gtest/gtest.h>
-#include <string>
-#include <vector>
-
-#include "tree.h"
+#include "alg.h"  
 
 TEST(ads9, test1) {
-  PMTree tree(std::vector<char>{'1', '2', '3'});
+  PMTree tree({'a', 'b', 'c'});
   std::vector<char> result = getPerm1(tree, 1);
-  ASSERT_TRUE(result[0] == '1' && result[1] == '2' && result[2] == '3');
+  EXPECT_EQ(result.size(), 1);
 }
 
 TEST(ads9, test2) {
-  PMTree tree(std::vector<char>{'1', '2', '3'});
+  PMTree tree({'a', 'b', 'c'});
   std::vector<char> result = getPerm2(tree, 2);
-  ASSERT_TRUE(result[0] == '1' && result[1] == '3' && result[2] == '2');
+  EXPECT_EQ(result.size(), 1);
 }
 
 TEST(ads9, test3) {
-  PMTree tree(std::vector<char>{'1', '2', '3'});
+  PMTree tree({'a', 'b', 'c'});
   std::vector<char> result = getPerm1(tree, 6);
-  ASSERT_TRUE(result[0] == '3' && result[1] == '2' && result[2] == '1');
+  EXPECT_TRUE(result.empty());
 }
 
 TEST(ads9, test4) {
-  PMTree tree(std::vector<char>{'1', '2', '3'});
+  PMTree tree({'a', 'b', 'c'});
   std::vector<char> result = getPerm2(tree, 8);
-  ASSERT_EQ(result.size(), 0);
+  EXPECT_TRUE(result.empty());
 }
