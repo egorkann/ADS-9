@@ -1,6 +1,7 @@
 // Copyright 2025 NNTU-CS
 #include "alg.h"
-
+#include <memory>  
+#include <vector>  
 PMTree::PMTree(const std::vector<char>& elements) : elements_(elements) {
   root = std::make_shared<Node>('R');
 }
