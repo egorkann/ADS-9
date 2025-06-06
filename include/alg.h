@@ -2,10 +2,10 @@
 #ifndef INCLUDE_ALG_H_
 #define INCLUDE_ALG_H_
 
-#include "tree.h"
-
 #include <memory>
 #include <vector>
+
+#include "tree.h"
 
 void buildTree(std::shared_ptr<PMNode> node,
                const std::vector<char>& remaining);
