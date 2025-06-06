@@ -1,4 +1,6 @@
 // Copyright 2025 NNTU-CS
+#include "tests.h"
+
 #include "alg.h"
 #include "tree.h"
 
