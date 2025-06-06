@@ -1,58 +1,84 @@
 // Copyright 2022 NNTU-CS
 #include "tree.h"
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <random>
-#include <fstream>
-#include <matplot/matplot.h>
+#include <vector>
 
-using namespace std;
-using namespace std::chrono;
-using namespace matplot;
+using std::cout;
+using std::endl;
+using std::vector;
+using std::string;
+using std::chrono::high_resolution_clock;
+using std::chrono::duration;
 
 int main() {
-    vector<int> sizes = {3, 4, 5, 6, 7, 8};
-    vector<double> t_all, t_1, t_2;
+    vector<char> input = {'1', '2', '3'};
+    PMTree tree(input);
 
-    random_device rd;
-    mt19937 gen(rd());
+    cout << "All permutations:" << endl;
+    auto all_perms = getAllPerms(tree);
+    for (const auto& perm : all_perms) {
+        for (char c : perm) {
+            cout << c;
+        }
+        cout << endl;
+    }
+
+    int num1 = 1;
+    auto perm1 = getPerm1(tree, num1);
+    cout << "Permutation " << num1 << " using getPerm1: ";
+    for (char c : perm1) {
+        cout << c;
+    }
+    cout << endl;
+
+    int num2 = 2;
+    auto perm2 = getPerm2(tree, num2);
+    cout << "Permutation " << num2 << " using getPerm2: ";
+    for (char c : perm2) {
+        cout << c;
+    }
+    cout << endl;
+
+    // Performance experiment
+    cout << "\nPerformance comparison:" << endl;
+    vector<int> sizes = {3, 4, 5, 6};
+    std::mt19937 rng(std::random_device{}());
 
     for (int n : sizes) {
         vector<char> chars;
-        for (int i = 0; i < n; ++i) chars.push_back('a' + i);
+        for (int i = 0; i < n; ++i) {
+            chars.push_back('a' + i);
+        }
+        PMTree perf_tree(chars);
+        int total_perms = 1;
+        for (int i = 2; i <= n; ++i) {
+            total_perms *= i;
+        }
+        std::uniform_int_distribution<int> dist(1, total_perms);
+        int target = dist(rng);
 
-        PMTree tree(chars);
+        auto start1 = high_resolution_clock::now();
+        getAllPerms(perf_tree);
+        auto end1 = high_resolution_clock::now();
 
-        // Measure getAllPerms
-        auto start = high_resolution_clock::now();
-        auto perms = getAllPerms(tree);
-        auto end = high_resolution_clock::now();
-        t_all.push_back(duration<double>(end - start).count());
+        auto start2 = high_resolution_clock::now();
+        getPerm1(perf_tree, target);
+        auto end2 = high_resolution_clock::now();
 
-        uniform_int_distribution<> dis(1, perms.size());
-        int num = dis(gen);
+        auto start3 = high_resolution_clock::now();
+        getPerm2(perf_tree, target);
+        auto end3 = high_resolution_clock::now();
 
-        // Measure getPerm1
-        start = high_resolution_clock::now();
-        auto p1 = getPerm1(tree, num);
-        end = high_resolution_clock::now();
-        t_1.push_back(duration<double>(end - start).count());
+        auto dur1 = duration<double, std::milli>(end1 - start1).count();
+        auto dur2 = duration<double, std::milli>(end2 - start2).count();
+        auto dur3 = duration<double, std::milli>(end3 - start3).count();
 
-        // Measure getPerm2
-        start = high_resolution_clock::now();
-        auto p2 = getPerm2(tree, num);
-        end = high_resolution_clock::now();
-        t_2.push_back(duration<double>(end - start).count());
+        cout << "Size: " << n << ", getAllPerms: " << dur1 << " ms, ";
+        cout << "getPerm1: " << dur2 << " ms, ";
+        cout << "getPerm2: " << dur3 << " ms" << endl;
     }
-
-    loglog(sizes, t_all, "-o")->label("getAllPerms");
-    loglog(sizes, t_1, "-o")->label("getPerm1");
-    loglog(sizes, t_2, "-o")->label("getPerm2");
-    legend();
-    xlabel("Alphabet size n");
-    ylabel("Time (s)");
-    save("result/plot.png");
-    show();
 
     return 0;
 }
