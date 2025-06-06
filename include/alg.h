@@ -4,8 +4,8 @@
 
 #include "tree.h"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 void buildTree(std::shared_ptr<PMNode> node,
                const std::vector<char>& remaining);
