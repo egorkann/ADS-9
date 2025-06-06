@@ -1,29 +1,39 @@
 // Copyright 2025 NNTU-CS
-#ifndef TREE_H
-#define TREE_H
+#ifndef INCLUDE_TREE_H_
+#define INCLUDE_TREE_H_
 
-#include <vector>
 #include <memory>
+#include <vector>
 
-struct PMNode {
-    char val;
-    std::vector<std::shared_ptr<PMNode>> children;
-
-    explicit PMNode(char v) : val(v) {}
+struct Node {
+  char data;
+  std::vector<std::shared_ptr<Node>> children;
+  Node(char d) : data(d) {}
 };
 
 class PMTree {
- private:
-    std::shared_ptr<PMNode> root;
-    std::vector<char> elements;
-    std::vector<std::vector<char>> allPerms;
-
  public:
-    PMTree(const std::vector<char>& elems);
+  explicit PMTree(const std::vector<char>& elems);
+  std::shared_ptr<Node> getRoot() const;
+  std::vector<char> getElements() const;
 
-    std::shared_ptr<PMNode> getRoot();
-    std::vector<char> getElements() const;
-    std::vector<std::vector<char>> getAllPerms() const;
+ private:
+  std::shared_ptr<Node> root_;
+  std::vector<char> elements_;
 };
 
-#endif  // TREE_H
+#endif  // INCLUDE_TREE_H_
+
+
+// === include/alg.h ===
+#ifndef INCLUDE_ALG_H_
+#define INCLUDE_ALG_H_
+
+#include <vector>
+#include "tree.h"
+
+std::vector<std::vector<char>> getAllPerms(PMTree& tree);
+std::vector<char> getPerm1(PMTree& tree, int k);
+std::vector<char> getPerm2(PMTree& tree, int k);
+
+#endif  // INCLUDE_ALG_H_
