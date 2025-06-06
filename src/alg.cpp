@@ -1,62 +1,59 @@
 // Copyright 2025 NNTU-CS
 #include "alg.h"
-#include <memory>  
-#include <vector>  
-PMTree::PMTree(const std::vector<char>& elements) : elements_(elements) {
-  root = std::make_shared<Node>('R');
+#include <memory>
+#include <vector>
+
+void buildTree(std::shared_ptr<PMNode> node, std::vector<char> remaining) {
+    if (remaining.empty()) return;
+    for (size_t i = 0; i < remaining.size(); ++i) {
+        char c = remaining[i];
+        auto child = std::make_shared<PMNode>(c);
+        node->children.push_back(child);
+
+        std::vector<char> next = remaining;
+        next.erase(next.begin() + i);
+        buildTree(child, next);
+    }
 }
 
-std::vector<char> PMTree::getElements() const {
-  return elements_;
-}
+void collectPerms(std::shared_ptr<PMNode> node, std::vector<char>& current, std::vector<std::vector<char>>& result) {
+    if (node->val != '\0') current.push_back(node->val);
 
-std::vector<std::vector<char>>& PMTree::getAllPerms() {
-  return allPerms_;
-}
+    if (node->children.empty()) {
+        result.push_back(current);
+    } else {
+        for (const auto& child : node->children) {
+            collectPerms(child, current, result);
+        }
+    }
 
-void buildTree(std::shared_ptr<Node> root, const std::vector<char>& elements) {
-  if (elements.empty()) {
-    return;
-  }
-  for (char c : elements) {
-    root->children.push_back(std::make_shared<Node>(c));
-  }
-}
-
-void collectPerms(std::shared_ptr<Node> node, std::vector<char>& current,
-                  std::vector<std::vector<char>>& allPerms) {
-  if (node->children.empty()) {
-    allPerms.push_back(current);
-    return;
-  }
-  for (auto& child : node->children) {
-    current.push_back(child->val);
-    collectPerms(child, current, allPerms);
-    current.pop_back();
-  }
+    if (!current.empty()) current.pop_back();
 }
 
 std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
-  if (tree.getAllPerms().empty()) {
-    buildTree(tree.root, tree.getElements());
+    buildTree(tree.getRoot(), tree.getElements());
     std::vector<char> current;
-    collectPerms(tree.root, current, tree.getAllPerms());
-  }
-  return tree.getAllPerms();
+    std::vector<std::vector<char>> result;
+    collectPerms(tree.getRoot(), current, result);
+    return result;
 }
 
-std::vector<char> getPerm1(PMTree& tree, int index) {
-  std::vector<char> elems = tree.getElements();
-  if (index >= 0 && index < static_cast<int>(elems.size())) {
-    return {elems[index]};
-  }
-  return {};
+std::vector<char> getPerm1(PMTree& tree, int k) {
+    auto perms = getAllPerms(tree);
+    if (k >= 1 && k <= static_cast<int>(perms.size())) {
+        return perms[k - 1];
+    }
+    return {};
 }
 
-std::vector<char> getPerm2(PMTree& tree, int index) {
-  std::vector<char> elems = tree.getElements();
-  if (index >= 0 && index < static_cast<int>(elems.size())) {
-    return {elems[index]};
-  }
-  return {};
+std::vector<char> getPerm2(PMTree& tree, int k) {
+    std::vector<std::vector<char>> result;
+    std::vector<char> current;
+    buildTree(tree.getRoot(), tree.getElements());
+    collectPerms(tree.getRoot(), current, result);
+
+    if (k >= 1 && k <= static_cast<int>(result.size())) {
+        return result[k - 1];
+    }
+    return {};
 }
