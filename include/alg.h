@@ -2,7 +2,7 @@
 #ifndef INCLUDE_ALG_H_
 #define INCLUDE_ALG_H_
 
-#include "tree.h"  
+#include "tree.h"
 
 #include <memory>
 #include <vector>
