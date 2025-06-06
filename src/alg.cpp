@@ -1,13 +1,16 @@
 // Copyright 2025 NNTU-CS
 #include "alg.h"
-#include "alg.h"
 
-void buildTree(std::shared_ptr<PMNode> node, const std::vector<char>& remaining) {
+#include <memory>  
+#include <vector>  
+
+void buildTree(std::shared_ptr<PMNode> node,
+               const std::vector<char>& remaining) {
   if (remaining.empty()) return;
 
   for (size_t i = 0; i < remaining.size(); ++i) {
     char ch = remaining[i];
-    std::shared_ptr<PMNode> child = std::make_shared<PMNode>(ch);
+    auto child = std::make_shared<PMNode>(ch);
     node->children.push_back(child);
 
     std::vector<char> next_remaining = remaining;
