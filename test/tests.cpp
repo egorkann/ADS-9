@@ -1,5 +1,5 @@
 // Copyright 2025 NNTU-CS
-#include "alg.h" 
+#include "alg.h"
 #include "tree.h"
 
 #include <cassert>
