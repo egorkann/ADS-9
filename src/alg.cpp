@@ -1,62 +1,33 @@
 // Copyright 2025 NNTU-CS
 #include "alg.h"
-#include <memory>
-#include <vector>
+#include "alg.h"
 
-void buildTree(std::shared_ptr<Node> node, std::vector<char> remaining) {
+void buildTree(std::shared_ptr<PMNode> node, const std::vector<char>& remaining) {
   if (remaining.empty()) return;
+
   for (size_t i = 0; i < remaining.size(); ++i) {
-    auto child = std::make_shared<Node>(remaining[i]);
+    char ch = remaining[i];
+    std::shared_ptr<PMNode> child = std::make_shared<PMNode>(ch);
     node->children.push_back(child);
-    auto next = remaining;
-    next.erase(next.begin() + i);
-    buildTree(child, next);
+
+    std::vector<char> next_remaining = remaining;
+    next_remaining.erase(next_remaining.begin() + i);
+
+    buildTree(child, next_remaining);
   }
 }
 
-void collectPerms(std::shared_ptr<Node> node,
-                  std::vector<char>& current,
+void collectPerms(std::shared_ptr<PMNode> node, std::vector<char>& current,
                   std::vector<std::vector<char>>& result) {
-  current.push_back(node->data);
+  current.push_back(node->val);
+
   if (node->children.empty()) {
     result.push_back(current);
   } else {
-    for (auto& child : node->children) {
+    for (const auto& child : node->children) {
       collectPerms(child, current, result);
     }
   }
+
   current.pop_back();
-}
-
-std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
-  auto root = tree.getRoot();
-  buildTree(root, tree.getElements());
-  std::vector<std::vector<char>> result;
-  std::vector<char> current;
-  for (auto& child : root->children) {
-    collectPerms(child, current, result);
-  }
-  return result;
-}
-
-std::vector<char> getPerm1(PMTree& tree, int k) {
-  auto perms = getAllPerms(tree);
-  if (k >= 1 && k <= static_cast<int>(perms.size())) {
-    return perms[k - 1];
-  }
-  return {};
-}
-
-std::vector<char> getPerm2(PMTree& tree, int k) {
-  std::vector<std::vector<char>> result;
-  std::vector<char> current;
-  auto root = tree.getRoot();
-  buildTree(root, tree.getElements());
-  for (auto& child : root->children) {
-    collectPerms(child, current, result);
-  }
-  if (k >= 1 && k <= static_cast<int>(result.size())) {
-    return result[k - 1];
-  }
-  return {};
 }
