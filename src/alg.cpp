@@ -5,6 +5,7 @@
 #include <algorithm>
 
 PMTree::PMTree(const std::vector<char>& elems) : elements_(elems) {
+  root = std::make_shared<Node>('R');  
 }
 
 std::vector<std::vector<char>> getAllPerms(PMTree& tree) {
