@@ -1,27 +1,29 @@
 // Copyright 2025 NNTU-CS
-#ifndef INCLUDE_TREE_H_
-#define INCLUDE_TREE_H_
+#ifndef TREE_H
+#define TREE_H
 
 #include <vector>
 #include <memory>
 
-struct Node {
-  char val;
-  std::vector<std::shared_ptr<Node>> children;
-  explicit Node(char v) : val(v) {}
+struct PMNode {
+    char val;
+    std::vector<std::shared_ptr<PMNode>> children;
+
+    explicit PMNode(char v) : val(v) {}
 };
 
 class PMTree {
- public:
-  explicit PMTree(const std::vector<char>& elements);
-  std::vector<char> getElements() const;
-  std::vector<std::vector<char>>& getAllPerms();
-
-  std::shared_ptr<Node> root;
-
  private:
-  std::vector<char> elements_;
-  std::vector<std::vector<char>> allPerms_;
+    std::shared_ptr<PMNode> root;
+    std::vector<char> elements;
+    std::vector<std::vector<char>> allPerms;
+
+ public:
+    PMTree(const std::vector<char>& elems);
+
+    std::shared_ptr<PMNode> getRoot();
+    std::vector<char> getElements() const;
+    std::vector<std::vector<char>> getAllPerms() const;
 };
 
-#endif  // INCLUDE_TREE_H_
+#endif  // TREE_H
