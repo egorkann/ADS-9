@@ -1,13 +1,13 @@
 // Copyright 2025 NNTU-CS
 #include "tests.h"
 
-#include "alg.h"
-#include "tree.h"
-
 #include <cassert>
 #include <iostream>
 #include <memory>
 #include <vector>
+
+#include "alg.h"
+#include "tree.h"
 
 void testTwoPermutations() {
   std::vector<char> input = {'x', 'y'};
